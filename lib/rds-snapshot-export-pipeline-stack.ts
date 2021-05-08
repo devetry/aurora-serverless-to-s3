@@ -15,11 +15,11 @@ export enum RdsEventId {
    *
    * See: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html
    */
-  // For automated snapshots of Aurora RDS clusters
-  DB_AUTOMATED_AURORA_SNAPSHOT_CREATED = "RDS-EVENT-0169",
-
-  // For automated snapshots of non-Aurora RDS clusters
-  DB_AUTOMATED_SNAPSHOT_CREATED = "RDS-EVENT-0091"
+  AUTOMATED_SNAPSHOT_CREATED = "RDS-EVENT-0169",
+  INSTANCE_RESTORED_FROM_SNAPSHOT = 'RDS-EVENT-0008',
+  MANUAL_SNAPSHOT_CREATED = 'RDS-EVENT-0042',
+  SNAPSHOT_EXPORT_COMPLETED = 'RDS-EVENT-0161',
+  SNAPSHOT_EXPORT_FAILED = 'RDS-EVENT-0159'
 }
 
 export interface RdsSnapshotExportPipelineStackProps extends cdk.StackProps {
@@ -35,10 +35,6 @@ export interface RdsSnapshotExportPipelineStackProps extends cdk.StackProps {
    */
   readonly dbName: string;
 
-  /**
-   * The RDS event ID for which the function should be triggered.
-   */
-  readonly rdsEventId: RdsEventId;
 };
 
 export class RdsSnapshotExportPipelineStack extends cdk.Stack {
@@ -164,16 +160,17 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
       })
     });
 
-    const snapshotEventTopic = new Topic(this, "SnapshotEventTopic", {
-      displayName: "rds-snapshot-creation"
+    const snapshotEventTopic = new Topic(this, "AuroraServerlessSnapshotPipeline", {
+      displayName: "aurora-serverless-snapshot-pipeline"
     });
 
-    new CfnEventSubscription(this, 'RdsSnapshotEventNotification', {
+    const sourceTypes = ['db-instance', 'db-cluster', 'db-snapshot', 'db-cluster-snapshot'];
+    sourceTypes.forEach(sourceType =>  new CfnEventSubscription(this, 'RdsSnapshotEventNotification-' + sourceType, {
       snsTopicArn: snapshotEventTopic.topicArn,
       enabled: true,
-      eventCategories: ['creation'],
-      sourceType: 'db-snapshot',
-    });
+      // eventCategories: ['creation', 'backup', 'restoration', 'notification'],
+      sourceType,
+    }));
 
     new Function(this, "LambdaFunction", {
       functionName: props.dbName + "-rds-snapshot-exporter",
@@ -181,7 +178,6 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
       handler: "main.handler",
       code: Code.fromAsset(path.join(__dirname, "/../assets/exporter/")),
       environment: {
-        RDS_EVENT_ID: props.rdsEventId,
         DB_NAME: props.dbName,
         LOG_LEVEL: "INFO",
         SNAPSHOT_BUCKET_NAME: bucket.bucketName,

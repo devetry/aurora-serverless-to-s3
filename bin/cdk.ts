@@ -5,7 +5,6 @@ import { RdsSnapshotExportPipelineStack, RdsEventId } from '../lib/rds-snapshot-
 
 const app = new cdk.App();
 new RdsSnapshotExportPipelineStack(app, 'RdsSnapshotExportToS3Pipeline', {
-  dbName: '<existing-rds-database-name>',
-  rdsEventId: RdsEventId.DB_AUTOMATED_SNAPSHOT_CREATED,
-  s3BucketName: '<desired-s3-bucket-name>',
+  dbName: 'me3-dev-db',
+  s3BucketName: 'me3-serverless-aurora-export',
 });
