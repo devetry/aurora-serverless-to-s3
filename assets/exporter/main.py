@@ -52,18 +52,18 @@ def handler(event, context):
         )
         return
 
-    logger.debug("EVENT INFO:")
-    logger.debug(json.dumps(event))
+    logger.info("EVENT INFO:")
+    logger.info(json.dumps(event))
 
     message = json.loads(event["Records"][0]["Sns"]["Message"])
 
-    if message["EventID"] == DB_AUTOMATED_SNAPSHOT_CREATED:
+    if message["Event ID"] == DB_AUTOMATED_SNAPSHOT_CREATED:
         restore_to_provisioned(message['SourceArn'])
-    elif message['EventID'] == DB_INSTANCE_RESTORED_FROM_SNAPSHOT:
+    elif message['Event ID'] == DB_INSTANCE_RESTORED_FROM_SNAPSHOT:
         make_manual_snapshot_of_provisioned(message)
-    elif message['EventID'] == MANUAL_SNAPSHOT_CREATED:
+    elif message['Event ID'] == MANUAL_SNAPSHOT_CREATED:
         kick_off_s3_export(message['SourceArn'])
-    elif message['EventID'] in (DB_SNAPSHOT_EXPORT_COMPLETED, DB_SNAPSHOT_EXPORT_FAILED):
+    elif message['Event ID'] in (DB_SNAPSHOT_EXPORT_COMPLETED, DB_SNAPSHOT_EXPORT_FAILED):
         clean_up_provisioned_db(message['SourceArn'])
 
     # if message["Event ID"].endswith(os.environ["RDS_EVENT_ID"]) and re.match(
