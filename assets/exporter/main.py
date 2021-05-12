@@ -21,7 +21,7 @@ up with four steps:
 The handler defined in this file will perform the correct step depending on the SNS event it receives.
 """
 
-DB_AUTOMATED_SNAPSHOT_CREATED = 'RDS-EVENT-0091'
+DB_AUTOMATED_SNAPSHOT_CREATED = 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0090'
 DB_INSTANCE_RESTORED_FROM_SNAPSHOT = 'RDS-EVENT-0008'
 MANUAL_SNAPSHOT_CREATED = 'RDS-EVENT-0042'
 DB_SNAPSHOT_EXPORT_COMPLETED = 'RDS-EVENT-0161'
@@ -32,7 +32,32 @@ logger.setLevel(os.getenv("LOG_LEVEL", logging.INFO))
 
 
 def restore_to_provisioned(snapshot_arn):
-    print('Restoring', snapshot_arn, 'to a new db')
+    # eg "arn:aws:rds:us-west-2:100026411130:snapshot:rds:me3-dev-test-2021-05-12-10-40"
+    snapshot_name = snapshot_arn.split(':')[-1]
+    m = re.match(r'(.*)-\d{4}-\d{2}-\d{2}-\d{2}-\d{2}', snapshot_name)
+    if m is None:
+        raise ValueError('could not find db name from snapshot name: ', snapshot_name)
+    source_db_name = m.group(1)
+    dest_db_name = source_db_name + '-fordatalake'
+    print('Restoring', snapshot_arn, 'to a new db called ', dest_db_name)
+    rds = boto3.client('rds')
+    result = rds.restore_db_cluster_from_snapshot(
+        DBClusterIdentifier=dest_db_name,
+        Engine='aurora-postgresql',
+        EngineMode='provisioned',
+        EngineVersion='10.14',
+        SnapshotIdentifier=snapshot_arn
+    )
+    # {'DBCluster': {
+    #   'AllocatedStorage': 20, 'AvailabilityZones': ['us-west-2c', 'us-west-2b', 'us-west-2a'], 'BackupRetentionPeriod': 7,
+    #   'DBClusterIdentifier': 'me3-dev-test-fordatalake', 'DBClusterParameterGroup': 'default.aurora-postgresql10', 'DBSubnetGroup': 'default',
+    #   'Status': 'creating', 'Endpoint': 'me3-dev-test-fordatalake.cluster-cecef7typpch.us-west-2.rds.amazonaws.com', 'ReaderEndpoint': 'me3-dev-test-fordatalake.cluster-ro-cecef7typpch.us-west-2.rds.amazonaws.com', 'MultiAZ': False, 'Engine': 'aurora-postgresql', 'EngineVersion': '10.14', 'Port': 5432, 'MasterUsername': 'postgres', 'PreferredBackupWindow': '10:29-10:59', 'PreferredMaintenanceWindow': 'fri:09:59-fri:10:29', 'ReadReplicaIdentifiers': [], 'DBClusterMembers': [], 'VpcSecurityGroups': [{'VpcSecurityGroupId': 'sg-60460505', 'Status': 'active'}], 'HostedZoneId': 'Z1PVIF0B656C1W', 'StorageEncrypted': False, 'DbClusterResourceId': 'cluster-DTNIC67PVSKIDY4YD7TGGPUIC4',
+    #   'DBClusterArn': 'arn:aws:rds:us-west-2:100026411130:cluster:me3-dev-test-fordatalake', 'AssociatedRoles': [], 'IAMDatabaseAuthenticationEnabled': False, 'ClusterCreateTime': datetime.datetime(2021, 5, 12, 18, 5, 29, 616000, tzinfo=tzlocal()), 'EngineMode': 'provisioned', 'DeletionProtection': False, 'HttpEndpointEnabled': False, 'CopyTagsToSnapshot': False, 'CrossAccountClone': False, 'DomainMemberships': [], 'TagList': []
+    #  }, 'ResponseMetadata': {'RequestId': 'b102cd41-1318-4331-86b3-a578c456dc76', 'HTTPStatusCode': 200, 'HTTPHeaders': {'x-amzn-requestid': 'b102cd41-1318-4331-86b3-a578c456dc76', 'content-type': 'text/xml', 'content-length': '2602', 'vary': 'accept-encoding', 'date': 'Wed, 12 May 2021 18:05:29 GMT'}, 'RetryAttempts': 0}}
+    rds.add_tags_to_resource(
+        ResourceName=result['DBCluster']['DBClusterArn'],
+        Tags=[{ 'Key': 'temporary:reason', 'Value': 'provisioned-for-backup-to-s3' }]
+    )
 
 def make_manual_snapshot_of_provisioned(message):
     print('making manual snapshot of new db', json.dumps(message))
@@ -58,13 +83,14 @@ def handler(event, context):
     message = json.loads(event["Records"][0]["Sns"]["Message"])
 
     if message["Event ID"] == DB_AUTOMATED_SNAPSHOT_CREATED:
-        restore_to_provisioned(message['SourceArn'])
+        # eg, {"Event Source":"db-snapshot","Event Time":"2021-05-12 10:41:00.185","Identifier Link":"https://console.aws.amazon.com/rds/home?region=us-west-2#snapshot:id=rds:me3-dev-test-2021-05-12-10-40","Source ID":"rds:me3-dev-test-2021-05-12-10-40","Source ARN":"arn:aws:rds:us-west-2:100026411130:snapshot:rds:me3-dev-test-2021-05-12-10-40","Event ID":"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0090","Event Message":"Creating automated snapshot"}
+        restore_to_provisioned(message['Source ARN'])
     elif message['Event ID'] == DB_INSTANCE_RESTORED_FROM_SNAPSHOT:
         make_manual_snapshot_of_provisioned(message)
     elif message['Event ID'] == MANUAL_SNAPSHOT_CREATED:
-        kick_off_s3_export(message['SourceArn'])
+        kick_off_s3_export(message['Source ARN'])
     elif message['Event ID'] in (DB_SNAPSHOT_EXPORT_COMPLETED, DB_SNAPSHOT_EXPORT_FAILED):
-        clean_up_provisioned_db(message['SourceArn'])
+        clean_up_provisioned_db(message['Source ARN'])
 
     # if message["Event ID"].endswith(os.environ["RDS_EVENT_ID"]) and re.match(
     #     "^rds:" + os.environ["DB_NAME"] + "-\d{4}-\d{2}-\d{2}-\d{2}-\d{2}$",
@@ -87,7 +113,4 @@ def handler(event, context):
     #     logger.info(json.dumps(response))
     else:
         logger.info(f"Ignoring event notification for {message['Source ID']}")
-        logger.info(
-            f"Function is configured to accept {os.environ['RDS_EVENT_ID']} "
-            f"notifications for {os.environ['DB_NAME']} only"
-        )
+

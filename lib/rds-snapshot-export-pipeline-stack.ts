@@ -80,6 +80,11 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
           "Version": "2012-10-17",
           "Statement": [
             {
+              "Action": "rds:RestoreDBClusterFromSnapshot",
+              "Resource": "*",
+              "Effect": "Allow",
+            },
+            {
               "Action": "rds:StartExportTask",
               "Resource": "*",
               "Effect": "Allow",
