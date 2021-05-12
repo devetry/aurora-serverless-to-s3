@@ -38,6 +38,9 @@ def restore_to_provisioned(snapshot_arn):
     if m is None:
         raise ValueError('could not find db name from snapshot name: ', snapshot_name)
     source_db_name = m.group(1)
+    if source_db_name != os.environ['DB_NAME']:
+        logger.info(f'ignoring snapshot for db {source_db_name}, as we only want to snapshot {os.environ["DB_NAME"]}')
+        return
     dest_db_name = source_db_name + '-fordatalake'
     print('Restoring', snapshot_arn, 'to a new db called ', dest_db_name)
     rds = boto3.client('rds')
