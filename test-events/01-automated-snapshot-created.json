@@ -1,0 +1,22 @@
+{
+    "Records": [
+      {
+        "EventSource": "aws:sns",
+        "EventVersion": "1.0",
+        "EventSubscriptionArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:706b7011-c066-419f-9e42-6b70478c641a",
+        "Sns": {
+          "Type": "Notification",
+          "MessageId": "95bd79b8-b689-558d-8d9a-20ad0475fc08",
+          "TopicArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT",
+          "Subject": "RDS Notification Message",
+          "Message": "{\"Event Source\":\"db-snapshot\",\"Event Time\":\"2021-05-12 10:41:00.185\",\"Identifier Link\":\"https://console.aws.amazon.com/rds/home?region=us-west-2#snapshot:id=rds:me3-dev-test-2021-05-12-10-40\",\"Source ID\":\"rds:me3-dev-test-2021-05-12-10-40\",\"Source ARN\":\"arn:aws:rds:us-west-2:100026411130:snapshot:rds:me3-dev-test-2021-05-12-10-40\",\"Event ID\":\"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0090\",\"Event Message\":\"Creating automated snapshot\"}",
+          "Timestamp": "2021-05-12T10:41:00.982Z",
+          "SignatureVersion": "1",
+          "Signature": "FgqZx+MoyzivNJQ73FAhKHTo55/bEV0tx3HBh/NOnkPMWC0Tk7gGCL8ZxXi1DQR3sWVaDSBkm8gg/94MPWUJuE4YMii0f54+76iAAFsfwpuB+0Wsuu1TSUdZEbKc9gPpGfZY4rd9LxkFu8NBJ2W3S7dYP+ScqdYkoydKDV6C4fXMxkettXPt9cLWciX7sedlyWlix4fdw1yHtQkw9WAINVr3fcxXDQnBdOdDOt8inMXNBokZOHQA9ycXNby/d8oGaNFzK0Ui/r9lsQarco7oJNSUTBg6XDdv7/4sO1SRslTQqcdWRz8dhJT7Dl/lVTUKv2NNB3Y1fpYMbO/6F9vzgg==",
+          "SigningCertUrl": "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-010a507c1833636cd94bdb98bd93083a.pem",
+          "UnsubscribeUrl": "https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:706b7011-c066-419f-9e42-6b70478c641a",
+          "MessageAttributes": {}
+        }
+      }
+    ]
+  }

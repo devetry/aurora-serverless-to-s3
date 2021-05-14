@@ -90,6 +90,16 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
               "Effect": "Allow",
             },
             {
+              "Action": "rds:CreateDBClusterSnapshot",
+              "Resource": "*",
+              "Effect": "Allow"
+            },
+            {
+              "Action": "rds:AddTagsToResource",
+              "Resource": "*",
+              "Effect": "Allow"
+            },
+            {
               "Action": "iam:PassRole",
               "Resource": [snapshotExportTaskRole.roleArn],
               "Effect": "Allow",
