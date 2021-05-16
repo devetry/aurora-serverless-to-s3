@@ -95,6 +95,16 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
               "Effect": "Allow"
             },
             {
+              "Action": "rds:DeleteDBClusterSnapshot",
+              "Resource": "*",
+              "Effect": "Allow"
+            },
+            {
+              "Action": "rds:DeleteDBCluster",
+              "Resource": "*",
+              "Effect": "Allow"
+            },
+            {
               "Action": "rds:AddTagsToResource",
               "Resource": "*",
               "Effect": "Allow"
