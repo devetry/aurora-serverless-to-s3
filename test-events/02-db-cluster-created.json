@@ -1,22 +1,22 @@
 {
-    "Records": [
+  "Records": [
       {
-        "EventSource": "aws:sns",
-        "EventVersion": "1.0",
-        "EventSubscriptionArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:706b7011-c066-419f-9e42-6b70478c641a",
-        "Sns": {
-          "Type": "Notification",
-          "MessageId": "850cc9a1-0214-578d-a9d4-90b7196d1f86",
-          "TopicArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT",
-          "Subject": "RDS Notification Message",
-          "Message": "{\"Event Source\":\"db-cluster\",\"Event Time\":\"2021-05-12 18:06:48.701\",\"Identifier Link\":\"https://console.aws.amazon.com/rds/home?region=us-west-2#dbclusters:id=me3-dev-test-fordatalake\",\"Source ID\":\"me3-dev-test-fordatalake\",\"Source ARN\":\"arn:aws:rds:us-west-2:100026411130:cluster:me3-dev-test-fordatalake\",\"Event ID\":\"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0170\",\"Event Message\":\"DB cluster created\"}",
-          "Timestamp": "2021-05-12T18:06:49.417Z",
-          "SignatureVersion": "1",
-          "Signature": "c9uVGGolzmOmMRjd/n6LeYaoXTw1rSH3z7pJqVL9O6owD9E7/6X70g8S7C3uwkJZZvFDiQlQnF+JjX+CZanbCO+r8p7bbsfuysrTXZeynRR2mpvLPz2TKmU2X82tc/5B7vMz9ltafLd4At0xPOHNeUrJ7CTV09cfKpJQ+Vm6SqVN9bE/bZDW7qMDxlGCuWeUUxxNgN/bKF7Plk0ZVXjuMzwjuq9J9c1zw0B63SoYx9Mvg97XISPVNE7M7N2ZvEZ/g1G0yzjwymXiGKc/0cliSatnwh4AZu2Ek8lp/2fQ6tSadwum97iZXildcFGOzE9Rk37WtTp217Jf/aZPcOU96Q==",
-          "SigningCertUrl": "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-010a507c1833636cd94bdb98bd93083a.pem",
-          "UnsubscribeUrl": "https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:706b7011-c066-419f-9e42-6b70478c641a",
-          "MessageAttributes": {}
-        }
+          "EventSource": "aws:sns",
+          "EventVersion": "1.0",
+          "EventSubscriptionArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:21827ac3-751f-4226-99fa-4d192312d533",
+          "Sns": {
+              "Type": "Notification",
+              "MessageId": "1a4e8fbd-47cb-5be7-959d-d6a7d3041961",
+              "TopicArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT",
+              "Subject": "RDS Notification Message",
+              "Message": "{\"Event Source\":\"db-cluster\",\"Event Time\":\"2021-05-16 03:33:34.532\",\"Identifier Link\":\"https://console.aws.amazon.com/rds/home?region=us-west-2#dbclusters:id=me3-dev-db-fordatalake\",\"Source ID\":\"me3-dev-db-fordatalake\",\"Source ARN\":\"arn:aws:rds:us-west-2:100026411130:cluster:me3-dev-db-fordatalake\",\"Event ID\":\"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0170\",\"Event Message\":\"DB cluster created\"}",
+              "Timestamp": "2021-05-16T03:33:35.666Z",
+              "SignatureVersion": "1",
+              "Signature": "sE2/ycX2oDdPR6QEar4D55rZjusZhdpV31C+o1CNaHnbpUO9mP1ov7xtCNT40p0w4ubYouuLDwXyyu0MTa/BhaURHpGXN6MUrpa2W5Me0MWXXsJ93QvvKnzMAWv/jibLioi9QU6JtEeyWGIuQX2UDbRgNAfSLcMI/KrhTDgasaNEjeC7iE/ehH/5saC/t/ZMolbwiyESxRTj5cxzdasOOS2Eafzwg/lMLAchPgT5nIW/DO+tCWL+NNRc41B98sHyvQ4RQ7v1d45TlbceaKcZU7NQp3lDhI+IBbnvD7jffYgZW/Pc0DhW7im7Sh81iJQ0FYwNBR9iiuSazKPA0CUaCA==",
+              "SigningCertUrl": "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-010a507c1833636cd94bdb98bd93083a.pem",
+              "UnsubscribeUrl": "https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:21827ac3-751f-4226-99fa-4d192312d533",
+              "MessageAttributes": {}
+          }
       }
-    ]
-  }
+  ]
+}

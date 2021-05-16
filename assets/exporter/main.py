@@ -24,8 +24,8 @@ The handler defined in this file will perform the correct step depending on the 
 DB_AUTOMATED_SNAPSHOT_CREATED = 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0169'
 DB_CLUSTER_CREATED = 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0170'
 MANUAL_SNAPSHOT_CREATED = "http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0075"
-DB_SNAPSHOT_EXPORT_COMPLETED = 'RDS-EVENT-0161'
-DB_SNAPSHOT_EXPORT_FAILED = 'RDS-EVENT-0159'
+DB_SNAPSHOT_EXPORT_COMPLETED = 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0164'
+DB_SNAPSHOT_EXPORT_FAILED = 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0162'
 
 logger = logging.getLogger()
 logger.setLevel(os.getenv("LOG_LEVEL", logging.INFO))
@@ -88,7 +88,7 @@ def kick_off_s3_export(event):
     logger.info('kicking off s3 export ' + snapshot_arn)
     response = boto3.client("rds").start_export_task(
         ExportTaskIdentifier=(
-            os.environ['DB_NAME'] + event["Records"][0]["Sns"]["MessageId"]
+            os.environ['DB_NAME'] + '-' + event["Records"][0]["Sns"]["MessageId"]
         ),
         SourceArn=message['Source ARN'],
         S3BucketName=os.environ["SNAPSHOT_BUCKET_NAME"],
