@@ -21,7 +21,7 @@ up with four steps:
 The handler defined in this file will perform the correct step depending on the SNS event it receives.
 """
 
-DB_AUTOMATED_SNAPSHOT_CREATED = 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0090'
+DB_AUTOMATED_SNAPSHOT_CREATED = 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0169'
 DB_CLUSTER_CREATED = 'http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0170'
 MANUAL_SNAPSHOT_CREATED = "http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0075"
 DB_SNAPSHOT_EXPORT_COMPLETED = 'RDS-EVENT-0161'
@@ -42,7 +42,7 @@ def restore_to_provisioned(snapshot_arn):
         logger.info(f'ignoring snapshot for db {source_db_name}, as we only want to snapshot {os.environ["DB_NAME"]}')
         return
     dest_db_name = source_db_name + '-fordatalake'
-    logger.info('Restoring', snapshot_arn, 'to a new db called ', dest_db_name)
+    logger.info('Restoring ' + snapshot_arn + ' to a new db called ' + dest_db_name)
     rds = boto3.client('rds')
     result = rds.restore_db_cluster_from_snapshot(
         DBClusterIdentifier=dest_db_name,

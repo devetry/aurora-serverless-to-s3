@@ -1,22 +1,22 @@
 {
-    "Records": [
+  "Records": [
       {
-        "EventSource": "aws:sns",
-        "EventVersion": "1.0",
-        "EventSubscriptionArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:706b7011-c066-419f-9e42-6b70478c641a",
-        "Sns": {
-          "Type": "Notification",
-          "MessageId": "95bd79b8-b689-558d-8d9a-20ad0475fc08",
-          "TopicArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT",
-          "Subject": "RDS Notification Message",
-          "Message": "{\"Event Source\":\"db-snapshot\",\"Event Time\":\"2021-05-12 10:41:00.185\",\"Identifier Link\":\"https://console.aws.amazon.com/rds/home?region=us-west-2#snapshot:id=rds:me3-dev-test-2021-05-12-10-40\",\"Source ID\":\"rds:me3-dev-test-2021-05-12-10-40\",\"Source ARN\":\"arn:aws:rds:us-west-2:100026411130:snapshot:rds:me3-dev-test-2021-05-12-10-40\",\"Event ID\":\"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0090\",\"Event Message\":\"Creating automated snapshot\"}",
-          "Timestamp": "2021-05-12T10:41:00.982Z",
-          "SignatureVersion": "1",
-          "Signature": "FgqZx+MoyzivNJQ73FAhKHTo55/bEV0tx3HBh/NOnkPMWC0Tk7gGCL8ZxXi1DQR3sWVaDSBkm8gg/94MPWUJuE4YMii0f54+76iAAFsfwpuB+0Wsuu1TSUdZEbKc9gPpGfZY4rd9LxkFu8NBJ2W3S7dYP+ScqdYkoydKDV6C4fXMxkettXPt9cLWciX7sedlyWlix4fdw1yHtQkw9WAINVr3fcxXDQnBdOdDOt8inMXNBokZOHQA9ycXNby/d8oGaNFzK0Ui/r9lsQarco7oJNSUTBg6XDdv7/4sO1SRslTQqcdWRz8dhJT7Dl/lVTUKv2NNB3Y1fpYMbO/6F9vzgg==",
-          "SigningCertUrl": "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-010a507c1833636cd94bdb98bd93083a.pem",
-          "UnsubscribeUrl": "https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:706b7011-c066-419f-9e42-6b70478c641a",
-          "MessageAttributes": {}
-        }
+          "EventSource": "aws:sns",
+          "EventVersion": "1.0",
+          "EventSubscriptionArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:21827ac3-751f-4226-99fa-4d192312d533",
+          "Sns": {
+              "Type": "Notification",
+              "MessageId": "90875dbc-779a-52ff-97eb-04a5e5c80fd7",
+              "TopicArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT",
+              "Subject": "RDS Notification Message",
+              "Message": "{\"Event Source\":\"db-cluster-snapshot\",\"Event Time\":\"2021-05-15 09:10:41.570\",\"Identifier Link\":\"https://console.aws.amazon.com/rds/home?region=us-west-2#snapshot:engine=aurora;id=rds:me3-dev-db-2021-05-15-09-10\",\"Source ID\":\"rds:me3-dev-db-2021-05-15-09-10\",\"Source ARN\":\"arn:aws:rds:us-west-2:100026411130:cluster-snapshot:rds:me3-dev-db-2021-05-15-09-10\",\"Event ID\":\"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0169\",\"Event Message\":\"Automated cluster snapshot created\"}",
+              "Timestamp": "2021-05-15T09:10:42.868Z",
+              "SignatureVersion": "1",
+              "Signature": "e2ry7CCSqBcL2IGylC/ii2XtrAQQhaKNb09uPCiHxArZE4g/wS+joBeo9ITQIobrn5Nwe9GVjLfOCy0Cog0tTy25sv+5K2es97FD9kRH1blQECqxch9Hfh3G4eb4UBWc3CUmDsDswoFa39UXPnwZeHuC1fYIl8OH+JNJFhyscTiPpdSwfzMAk7hpagGdYFCrjYwpQSmB0niE4MS9vPfAyqZ3k8Wegx8Z/OKbEir3UO9BZOuNakBVFa9lnwdvE5s6GaBWfXQyeFM0Gv8myLIVhxvE7c02oKc0+uhg+NRH6V/QU63YIpmRkhWjgDf7cwuzujxvH1vyWzEK8wSR83+XUA==",
+              "SigningCertUrl": "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-010a507c1833636cd94bdb98bd93083a.pem",
+              "UnsubscribeUrl": "https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:21827ac3-751f-4226-99fa-4d192312d533",
+              "MessageAttributes": {}
+          }
       }
-    ]
-  }
+  ]
+}
