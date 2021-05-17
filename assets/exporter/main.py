@@ -9,14 +9,14 @@ import boto3
 Aurora Serverless currently cannot dump to S3 from a snapshot. In order to work around this, we've come
 up with four steps:
     1. Restore a serverless snapshot to a provisioned db. initiated upon receiving
-        "RDS-EVENT-0091: Automated DB Snapshot has been created."
+        "RDS-EVENT-0169: Automated DB Snapshot has been created."
     2. Kick off a snapshot of that db. initiated upon receiving
-        "RDS-EVENT-0008: DB Instance restored from snapshot"
+        "RDS-EVENT-0179: DB Instance restored from snapshot"
     3. Export the snapshot of the provisioned db to S3. initiated upon receiving
-        "RDS-EVENT-0042: Manual DB Snapshot has been created"
-    4. Clean up the db we created. intiated upon receiving
-        "RDS-EVENT-0161: DB snapshot export task completed."
-        "RDS-EVENT-0159: DB snapshot export task failed.:
+        "RDS-EVENT-0075: Manual DB Snapshot has been created"
+    4. Clean up the db we created. initiated upon receiving
+        "RDS-EVENT-0164: DB snapshot export task completed."
+        "RDS-EVENT-0162: DB snapshot export task failed.:
 
 The handler defined in this file will perform the correct step depending on the SNS event it receives.
 """
