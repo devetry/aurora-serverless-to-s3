@@ -88,7 +88,7 @@ def kick_off_s3_export(event):
     logger.info('kicking off s3 export ' + snapshot_arn)
     response = boto3.client("rds").start_export_task(
         ExportTaskIdentifier=(
-            os.environ['DB_NAME'] + '-' + event["Records"][0]["Sns"]["MessageId"]
+            message['Event Time'].split(' ')[0] + '-' + os.environ['DB_NAME'] + '-' + event["Records"][0]["Sns"]["MessageId"][:6]
         ),
         SourceArn=message['Source ARN'],
         S3BucketName=os.environ["SNAPSHOT_BUCKET_NAME"],

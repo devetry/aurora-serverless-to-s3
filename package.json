@@ -1,13 +1,12 @@
 {
   "name": "rds-snapshot-export-to-s3-pipeline",
   "version": "0.1.0",
-  "bin": {
-    "cdk": "bin/cdk.js"
-  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "dev": "cdk --app 'npx ts-node bin/dev.ts'",
+    "staging": "cdk --app 'npx ts-node bin/staging.ts'"
   },
   "devDependencies": {
     "@types/node": "13.9.1",

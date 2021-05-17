@@ -9,19 +9,6 @@ import {CfnEventSubscription} from "@aws-cdk/aws-rds";
 import {BlockPublicAccess, Bucket} from "@aws-cdk/aws-s3";
 import {Topic} from "@aws-cdk/aws-sns";
 
-export enum RdsEventId {
-  /**
-   * Event IDs for which the Lambda supports starting a snapshot export task.
-   *
-   * See: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html
-   */
-  AUTOMATED_SNAPSHOT_CREATED = "RDS-EVENT-0169",
-  INSTANCE_RESTORED_FROM_SNAPSHOT = 'RDS-EVENT-0008',
-  MANUAL_SNAPSHOT_CREATED = 'RDS-EVENT-0042',
-  SNAPSHOT_EXPORT_COMPLETED = 'RDS-EVENT-0161',
-  SNAPSHOT_EXPORT_FAILED = 'RDS-EVENT-0159'
-}
-
 export interface RdsSnapshotExportPipelineStackProps extends cdk.StackProps {
   /**
    * Name of the S3 bucket to which snapshot exports should be saved.
