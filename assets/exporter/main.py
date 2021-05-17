@@ -85,11 +85,10 @@ def kick_off_s3_export(event):
     if snapshot_name != os.environ['DB_NAME'] + '-snapshot':
         logger.info(f'ignoring snapshot {snapshot_name}, as we only want to export for {os.environ["DB_NAME"]}')
         return
-    logger.info('kicking off s3 export ' + snapshot_arn)
+    export_task = os.environ['DB_NAME'] + '-' + message['Event Time'].split(' ')[0] + '-' + event["Records"][0]["Sns"]["MessageId"][:6]
+    logger.info('kicking off s3 export ' + snapshot_arn + ' saving as "' + export_task +'"')
     response = boto3.client("rds").start_export_task(
-        ExportTaskIdentifier=(
-            message['Event Time'].split(' ')[0] + '-' + os.environ['DB_NAME'] + '-' + event["Records"][0]["Sns"]["MessageId"][:6]
-        ),
+        ExportTaskIdentifier=export_task,
         SourceArn=message['Source ARN'],
         S3BucketName=os.environ["SNAPSHOT_BUCKET_NAME"],
         IamRoleArn=os.environ["SNAPSHOT_TASK_ROLE"],
