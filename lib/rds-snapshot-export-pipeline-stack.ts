@@ -28,10 +28,14 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: RdsSnapshotExportPipelineStackProps) {
     super(scope, id, props);
 
-    const bucket = new Bucket(this, "SnapshotExportBucket", {
-      bucketName: props.s3BucketName,
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-    });
+    // use an existing bucket
+    const bucket = Bucket.fromBucketName(this, "SnapshotExportBucket", props.s3BucketName);
+
+    // create a new bucket
+    // const bucket = new Bucket(this, "SnapshotExportBucket", {
+    //   bucketName: props.s3BucketName,
+    //   blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+    // });
 
     const snapshotExportTaskRole = new Role(this, "SnapshotExportTaskRole", {
       assumedBy: new ServicePrincipal("export.rds.amazonaws.com"),
