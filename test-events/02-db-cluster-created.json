@@ -1,0 +1,22 @@
+{
+  "Records": [
+      {
+          "EventSource": "aws:sns",
+          "EventVersion": "1.0",
+          "EventSubscriptionArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:21827ac3-751f-4226-99fa-4d192312d533",
+          "Sns": {
+              "Type": "Notification",
+              "MessageId": "1a4e8fbd-47cb-5be7-959d-d6a7d3041961",
+              "TopicArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT",
+              "Subject": "RDS Notification Message",
+              "Message": "{\"Event Source\":\"db-cluster\",\"Event Time\":\"2021-05-16 03:33:34.532\",\"Identifier Link\":\"https://console.aws.amazon.com/rds/home?region=us-west-2#dbclusters:id=me3-dev-db-fordatalake\",\"Source ID\":\"me3-dev-db-fordatalake\",\"Source ARN\":\"arn:aws:rds:us-west-2:100026411130:cluster:me3-dev-db-fordatalake\",\"Event ID\":\"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0170\",\"Event Message\":\"DB cluster created\"}",
+              "Timestamp": "2021-05-16T03:33:35.666Z",
+              "SignatureVersion": "1",
+              "Signature": "sE2/ycX2oDdPR6QEar4D55rZjusZhdpV31C+o1CNaHnbpUO9mP1ov7xtCNT40p0w4ubYouuLDwXyyu0MTa/BhaURHpGXN6MUrpa2W5Me0MWXXsJ93QvvKnzMAWv/jibLioi9QU6JtEeyWGIuQX2UDbRgNAfSLcMI/KrhTDgasaNEjeC7iE/ehH/5saC/t/ZMolbwiyESxRTj5cxzdasOOS2Eafzwg/lMLAchPgT5nIW/DO+tCWL+NNRc41B98sHyvQ4RQ7v1d45TlbceaKcZU7NQp3lDhI+IBbnvD7jffYgZW/Pc0DhW7im7Sh81iJQ0FYwNBR9iiuSazKPA0CUaCA==",
+              "SigningCertUrl": "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-010a507c1833636cd94bdb98bd93083a.pem",
+              "UnsubscribeUrl": "https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:21827ac3-751f-4226-99fa-4d192312d533",
+              "MessageAttributes": {}
+          }
+      }
+  ]
+}

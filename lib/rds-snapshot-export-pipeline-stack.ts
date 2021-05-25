@@ -9,19 +9,6 @@ import {CfnEventSubscription} from "@aws-cdk/aws-rds";
 import {BlockPublicAccess, Bucket} from "@aws-cdk/aws-s3";
 import {Topic} from "@aws-cdk/aws-sns";
 
-export enum RdsEventId {
-  /**
-   * Event IDs for which the Lambda supports starting a snapshot export task.
-   *
-   * See: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html
-   */
-  // For automated snapshots of Aurora RDS clusters
-  DB_AUTOMATED_AURORA_SNAPSHOT_CREATED = "RDS-EVENT-0169",
-
-  // For automated snapshots of non-Aurora RDS clusters
-  DB_AUTOMATED_SNAPSHOT_CREATED = "RDS-EVENT-0091"
-}
-
 export interface RdsSnapshotExportPipelineStackProps extends cdk.StackProps {
   /**
    * Name of the S3 bucket to which snapshot exports should be saved.
@@ -35,20 +22,20 @@ export interface RdsSnapshotExportPipelineStackProps extends cdk.StackProps {
    */
   readonly dbName: string;
 
-  /**
-   * The RDS event ID for which the function should be triggered.
-   */
-  readonly rdsEventId: RdsEventId;
 };
 
 export class RdsSnapshotExportPipelineStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: RdsSnapshotExportPipelineStackProps) {
     super(scope, id, props);
 
-    const bucket = new Bucket(this, "SnapshotExportBucket", {
-      bucketName: props.s3BucketName,
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-    });
+    // use an existing bucket
+    const bucket = Bucket.fromBucketName(this, "SnapshotExportBucket", props.s3BucketName);
+
+    // create a new bucket
+    // const bucket = new Bucket(this, "SnapshotExportBucket", {
+    //   bucketName: props.s3BucketName,
+    //   blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+    // });
 
     const snapshotExportTaskRole = new Role(this, "SnapshotExportTaskRole", {
       assumedBy: new ServicePrincipal("export.rds.amazonaws.com"),
@@ -84,9 +71,34 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
           "Version": "2012-10-17",
           "Statement": [
             {
+              "Action": "rds:RestoreDBClusterFromSnapshot",
+              "Resource": "*",
+              "Effect": "Allow",
+            },
+            {
               "Action": "rds:StartExportTask",
               "Resource": "*",
               "Effect": "Allow",
+            },
+            {
+              "Action": "rds:CreateDBClusterSnapshot",
+              "Resource": "*",
+              "Effect": "Allow"
+            },
+            {
+              "Action": "rds:DeleteDBClusterSnapshot",
+              "Resource": "*",
+              "Effect": "Allow"
+            },
+            {
+              "Action": "rds:DeleteDBCluster",
+              "Resource": "*",
+              "Effect": "Allow"
+            },
+            {
+              "Action": "rds:AddTagsToResource",
+              "Resource": "*",
+              "Effect": "Allow"
             },
             {
               "Action": "iam:PassRole",
@@ -164,16 +176,17 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
       })
     });
 
-    const snapshotEventTopic = new Topic(this, "SnapshotEventTopic", {
-      displayName: "rds-snapshot-creation"
+    const snapshotEventTopic = new Topic(this, "AuroraServerlessSnapshotPipeline", {
+      displayName: "aurora-serverless-snapshot-pipeline"
     });
 
-    new CfnEventSubscription(this, 'RdsSnapshotEventNotification', {
+    const sourceTypes = ['db-instance', 'db-cluster', 'db-snapshot', 'db-cluster-snapshot'];
+    sourceTypes.forEach(sourceType =>  new CfnEventSubscription(this, 'RdsSnapshotEventNotification-' + sourceType, {
       snsTopicArn: snapshotEventTopic.topicArn,
       enabled: true,
-      eventCategories: ['creation'],
-      sourceType: 'db-snapshot',
-    });
+      // eventCategories: ['creation', 'backup', 'restoration', 'notification'],
+      sourceType,
+    }));
 
     new Function(this, "LambdaFunction", {
       functionName: props.dbName + "-rds-snapshot-exporter",
@@ -181,7 +194,6 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
       handler: "main.handler",
       code: Code.fromAsset(path.join(__dirname, "/../assets/exporter/")),
       environment: {
-        RDS_EVENT_ID: props.rdsEventId,
         DB_NAME: props.dbName,
         LOG_LEVEL: "INFO",
         SNAPSHOT_BUCKET_NAME: bucket.bucketName,

@@ -1,0 +1,22 @@
+{
+    "Records": [
+        {
+            "EventSource": "aws:sns",
+            "EventVersion": "1.0",
+            "EventSubscriptionArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:21827ac3-751f-4226-99fa-4d192312d533",
+            "Sns": {
+                "Type": "Notification",
+                "MessageId": "f4866d55-6a1e-53a8-8bd3-344ffef90d82",
+                "TopicArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT",
+                "Subject": "RDS Notification Message",
+                "Message": "{\"Event Source\":\"db-cluster-snapshot\",\"Event Time\":\"2021-05-16 03:33:58.391\",\"Identifier Link\":\"https://console.aws.amazon.com/rds/home?region=us-west-2#snapshot:engine=aurora;id=me3-dev-db-snapshot\",\"Source ID\":\"me3-dev-db-snapshot\",\"Source ARN\":\"arn:aws:rds:us-west-2:100026411130:cluster-snapshot:me3-dev-db-snapshot\",\"Event ID\":\"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0075\",\"Event Message\":\"Manual cluster snapshot created\"}",
+                "Timestamp": "2021-05-16T03:33:59.430Z",
+                "SignatureVersion": "1",
+                "Signature": "rPzuMFEqkZLb78zflv7zDZCyPFPRxLtWfSgWurGkCrO3o/9O35Gk6dk9pCZVFFNRxsWV20G7UOVDAH8cXvKMjcxTv9HWx/18Y94F+vbpjlTDgXnIPw5Kbn6wbMNbB9KN16W5MFXSl23H5+H1VS7yVMO+ZeJbgVV6+WLhQHh+dtUHY73UYeYMTgwakIGUTcZOAmnk3hcXqy1YlmNpw04b90zHHQ1uu7UjpAyqSeIRB9smtgr3ZQMPrVh+/luVuur9jLCsmIsJ3uv2gPESuda8pvA8Xnji61AYbePzcqoV8i+2GjGbhni9xPcKqTYka4SI6H480Y+2SlUcGX6QFw+vmA==",
+                "SigningCertUrl": "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-010a507c1833636cd94bdb98bd93083a.pem",
+                "UnsubscribeUrl": "https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:21827ac3-751f-4226-99fa-4d192312d533",
+                "MessageAttributes": {}
+            }
+        }
+    ]
+}
