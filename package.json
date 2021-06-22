@@ -6,7 +6,8 @@
     "watch": "tsc -w",
     "cdk": "cdk",
     "dev": "cdk --app 'npx ts-node bin/dev.ts'",
-    "staging": "cdk --app 'npx ts-node bin/staging.ts'"
+    "staging": "cdk --app 'npx ts-node bin/staging.ts'",
+    "prod": "cdk --app 'npx ts-node bin/prod.ts'"
   },
   "devDependencies": {
     "@types/node": "13.9.1",
