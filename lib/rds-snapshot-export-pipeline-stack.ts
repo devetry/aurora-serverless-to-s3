@@ -22,6 +22,7 @@ export interface RdsSnapshotExportPipelineStackProps extends cdk.StackProps {
    */
   readonly dbName: string;
 
+  readonly prefix?: string;
 };
 
 export class RdsSnapshotExportPipelineStack extends cdk.Stack {
@@ -81,12 +82,22 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
               "Effect": "Allow",
             },
             {
+              "Action": "rds:DescribeExportTasks",
+              "Resource": "*",
+              "Effect": "Allow",
+            },
+            {
               "Action": "rds:CreateDBClusterSnapshot",
               "Resource": "*",
               "Effect": "Allow"
             },
             {
               "Action": "rds:DeleteDBClusterSnapshot",
+              "Resource": "*",
+              "Effect": "Allow"
+            },
+            {
+              "Action": "rds:DescribeDBClusterSnapshots",
               "Resource": "*",
               "Effect": "Allow"
             },
@@ -199,6 +210,7 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
         SNAPSHOT_BUCKET_NAME: bucket.bucketName,
         SNAPSHOT_TASK_ROLE: snapshotExportTaskRole.roleArn,
         SNAPSHOT_TASK_KEY: snapshotExportEncryptionKey.keyArn,
+        SNAPSHOT_OBJECT_PREFIX: props.prefix || '',
       },
       role: lambdaExecutionRole,
       timeout: cdk.Duration.seconds(30),

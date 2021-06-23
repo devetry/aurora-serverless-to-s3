@@ -77,6 +77,24 @@ def make_manual_snapshot_of_provisioned(db_arn):
         Tags=[{ 'Key': 'temporary:reason', 'Value': 'provisioned-for-backup-to-s3' }]
     )
 
+def export_task_identifier(snapshot_arn):
+    """
+    The ExportTaskCompleted notification doesn't include the id
+    of the export task. So we need it to be deterministically
+    generated based on the snapshot's details, which we do get
+    in the notification.
+    """
+    rds = boto3.client('rds')
+    snapshots = rds.describe_db_cluster_snapshots(
+        DBClusterSnapshotIdentifier=snapshot_arn
+    )
+    if not snapshots['DBClusterSnapshots']:
+        logger.warn(f"uh oh, couldn't find a cluster snapshot with that arn. skipping the export task")
+        return
+    snapshot_details = snapshots['DBClusterSnapshots'][0]
+    return f"{os.environ['DB_NAME']}-{snapshot_details['SnapshotCreateTime'].date().isoformat()}-{snapshot_arn.split(':')[4][:5]}"
+
+
 def kick_off_s3_export(event):
     # eg, "arn:aws:rds:us-west-2:100026411130:cluster-snapshot:me3-dev-test-snapshot"
     message = json.loads(event['Records'][0]['Sns']['Message'])
@@ -85,7 +103,8 @@ def kick_off_s3_export(event):
     if snapshot_name != os.environ['DB_NAME'] + '-snapshot':
         logger.info(f'ignoring snapshot {snapshot_name}, as we only want to export for {os.environ["DB_NAME"]}')
         return
-    export_task = os.environ['DB_NAME'] + '-' + message['Event Time'].split(' ')[0] + '-' + event["Records"][0]["Sns"]["MessageId"][:6]
+
+    export_task = export_task_identifier(snapshot_arn)
     logger.info('kicking off s3 export ' + snapshot_arn + ' saving as "' + export_task +'"')
     response = boto3.client("rds").start_export_task(
         ExportTaskIdentifier=export_task,
@@ -93,19 +112,43 @@ def kick_off_s3_export(event):
         S3BucketName=os.environ["SNAPSHOT_BUCKET_NAME"],
         IamRoleArn=os.environ["SNAPSHOT_TASK_ROLE"],
         KmsKeyId=os.environ["SNAPSHOT_TASK_KEY"],
+        S3Prefix=os.environ['SNAPSHOT_OBJECT_PREFIX']
     )
     response["SnapshotTime"] = str(response["SnapshotTime"])
 
     logger.info("Snapshot export task started")
     logger.info(json.dumps(response))
 
-def clean_up_provisioned_db(snapshot_arn):
+def update_ownership(task):
+    s3 = boto3.client('s3')
+    logger.info(f"changing ownership of s3://{task['S3Bucket']}/{task['S3Prefix']}{task['ExportTaskIdentifier']}")
+    kwargs = { 'Bucket': task['S3Bucket'], 'Prefix': task['S3Prefix'] + task['ExportTaskIdentifier'] }
+    while True:
+        resp = client.list_objects_v2(**kwargs)
+        for obj in resp['Contents']:
+            s3.put_object_acl(
+                ACL='bucket-owner-full-control',
+                Bucket=task['S3Bucket'],
+                Key=obj['Key']
+            )
+        if 'NextContinuationToken' not in resp: break
+        kwargs['ContinuationToken'] = resp['NextContinuationToken']
+    logger.info('finished updating ownership')
+
+def clean_up_provisioned_db(snapshot_arn, event_id):
     snapshot_name = snapshot_arn.split(':')[-1]
     if snapshot_name != os.environ['DB_NAME'] + '-snapshot':
         logger.info(f'ignoring clean up request for {snapshot_name}, as we\'re only monitoring {os.environ["DB_NAME"]}')
         return
     logger.info('cleaning up provisioned db ' + snapshot_arn)
+    export_task = export_task_identifier(snapshot_arn)
     rds = boto3.client('rds')
+    tasks = rds.describe_export_tasks(
+        ExportTaskIdentifier=export_task
+    )
+    if tasks['ExportTasks']:
+        task = tasks['ExportTasks'][0]
+        update_ownership(task)
     rds.delete_db_cluster_snapshot(
         DBClusterSnapshotIdentifier=snapshot_name
     )
@@ -139,7 +182,7 @@ def handler(event, context):
         # eg, {"Event Source":"db-cluster-snapshot","Event Time":"2021-05-13 17:49:53.624","Identifier Link":"https://console.aws.amazon.com/rds/home?region=us-west-2#snapshot:engine=aurora;id=me3-dev-test-fordatalake-snapshot","Source ID":"me3-dev-test-fordatalake-snapshot","Source ARN":"arn:aws:rds:us-west-2:100026411130:cluster-snapshot:me3-dev-test-fordatalake-snapshot","Event ID":"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0075","Event Message":"Manual cluster snapshot created"}
         kick_off_s3_export(event)
     elif message['Event ID'] in (DB_SNAPSHOT_EXPORT_COMPLETED, DB_SNAPSHOT_EXPORT_FAILED):
-        clean_up_provisioned_db(message['Source ARN'])
+        clean_up_provisioned_db(message['Source ARN'], message['Event ID'])
 
     # if message["Event ID"].endswith(os.environ["RDS_EVENT_ID"]) and re.match(
     #     "^rds:" + os.environ["DB_NAME"] + "-\d{4}-\d{2}-\d{2}-\d{2}-\d{2}$",
