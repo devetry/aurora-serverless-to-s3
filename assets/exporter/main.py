@@ -112,7 +112,6 @@ def kick_off_s3_export(event):
         S3BucketName=os.environ["SNAPSHOT_BUCKET_NAME"],
         IamRoleArn=os.environ["SNAPSHOT_TASK_ROLE"],
         KmsKeyId=os.environ["SNAPSHOT_TASK_KEY"],
-        S3Prefix=os.environ['SNAPSHOT_OBJECT_PREFIX']
     )
     response["SnapshotTime"] = str(response["SnapshotTime"])
 
@@ -126,10 +125,14 @@ def update_ownership(task):
     while True:
         resp = client.list_objects_v2(**kwargs)
         for obj in resp['Contents']:
-            s3.put_object_acl(
+            s3.copy(
+                CopySource=dict(
+                    Bucket=task['S3Bucket'],
+                    Key=obj['Key'],
+                ),
+                Bucket='arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3',
                 ACL='bucket-owner-full-control',
-                Bucket=task['S3Bucket'],
-                Key=obj['Key']
+                Key='raw/me3/' + obj['Key']
             )
         if 'NextContinuationToken' not in resp: break
         kwargs['ContinuationToken'] = resp['NextContinuationToken']

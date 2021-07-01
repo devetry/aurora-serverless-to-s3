@@ -6,7 +6,7 @@ import {Code, Function, Runtime} from "@aws-cdk/aws-lambda";
 import {SnsEventSource} from "@aws-cdk/aws-lambda-event-sources";
 import {Key} from "@aws-cdk/aws-kms";
 import {CfnEventSubscription} from "@aws-cdk/aws-rds";
-import {BlockPublicAccess, Bucket} from "@aws-cdk/aws-s3";
+import {BlockPublicAccess, Bucket, CfnAccessPoint} from "@aws-cdk/aws-s3";
 import {Topic} from "@aws-cdk/aws-sns";
 
 export interface RdsSnapshotExportPipelineStackProps extends cdk.StackProps {
@@ -21,8 +21,6 @@ export interface RdsSnapshotExportPipelineStackProps extends cdk.StackProps {
    * Name of the database cluster whose snapshots the function supports exporting.
    */
   readonly dbName: string;
-
-  readonly prefix?: string;
 };
 
 export class RdsSnapshotExportPipelineStack extends cdk.Stack {
@@ -31,7 +29,6 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
 
     // use an existing bucket
     const bucket = Bucket.fromBucketName(this, "SnapshotExportBucket", props.s3BucketName);
-
     // create a new bucket
     // const bucket = new Bucket(this, "SnapshotExportBucket", {
     //   bucketName: props.s3BucketName,
@@ -56,6 +53,8 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
               "Resource": [
                 `${bucket.bucketArn}`,
                 `${bucket.bucketArn}/*`,
+                'arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3',
+                'arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3/*'
               ],
               "Effect": "Allow"
             }
@@ -210,7 +209,6 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
         SNAPSHOT_BUCKET_NAME: bucket.bucketName,
         SNAPSHOT_TASK_ROLE: snapshotExportTaskRole.roleArn,
         SNAPSHOT_TASK_KEY: snapshotExportEncryptionKey.keyArn,
-        SNAPSHOT_OBJECT_PREFIX: props.prefix || '',
       },
       role: lambdaExecutionRole,
       timeout: cdk.Duration.seconds(30),

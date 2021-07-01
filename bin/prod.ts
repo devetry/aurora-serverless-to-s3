@@ -6,6 +6,5 @@ import { RdsSnapshotExportPipelineStack } from '../lib/rds-snapshot-export-pipel
 const app = new cdk.App();
 new RdsSnapshotExportPipelineStack(app, 'RdsSnapshotExportToS3Pipeline', {
   dbName: 'me3-production-db-cluster',
-  s3BucketName: 'asu-s3dl-eds',
-  prefix: 'raw/me3/'
+  s3BucketName: 'me3-db-export',
 });
