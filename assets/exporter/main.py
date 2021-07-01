@@ -123,7 +123,7 @@ def update_ownership(task):
     logger.info(f"changing ownership of s3://{task['S3Bucket']}/{task['S3Prefix']}{task['ExportTaskIdentifier']}")
     kwargs = { 'Bucket': task['S3Bucket'], 'Prefix': task['S3Prefix'] + task['ExportTaskIdentifier'] }
     while True:
-        resp = client.list_objects_v2(**kwargs)
+        resp = s3.list_objects_v2(**kwargs)
         for obj in resp['Contents']:
             s3.copy(
                 CopySource=dict(

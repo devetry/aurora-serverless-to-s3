@@ -53,8 +53,6 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
               "Resource": [
                 `${bucket.bucketArn}`,
                 `${bucket.bucketArn}/*`,
-                'arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3',
-                'arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3/*'
               ],
               "Effect": "Allow"
             }
@@ -114,6 +112,22 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
               "Action": "iam:PassRole",
               "Resource": [snapshotExportTaskRole.roleArn],
               "Effect": "Allow",
+            },
+            {
+              "Action": [
+                "s3:PutObject*",
+                "s3:ListBucket",
+                "s3:GetObject*",
+                "s3:DeleteObject*",
+                "s3:GetBucketLocation"
+              ],
+              "Resource": [
+                `${bucket.bucketArn}`,
+                `${bucket.bucketArn}/*`,
+                'arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3',
+                'arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3/*'
+              ],
+              "Effect": "Allow"
             }
           ]
         })
