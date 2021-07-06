@@ -122,6 +122,12 @@ def update_ownership(task):
     s3 = boto3.client('s3')
     logger.info(f"changing ownership of s3://{task['S3Bucket']}/{task['S3Prefix']}{task['ExportTaskIdentifier']}")
     kwargs = { 'Bucket': task['S3Bucket'], 'Prefix': task['S3Prefix'] + task['ExportTaskIdentifier'] }
+    # assert 0 == os.system(
+    #     'aws s3 cp ' +
+    #     f's3://{task["S3Bucket"]}/{task["S3Prefix"]}{task["ExportTaskIdentifier"]} ' +
+    #     f's3://arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3 ' +
+    #     '--recursive --acl bucket-owner-full-control'
+    #     )
     while True:
         resp = s3.list_objects_v2(**kwargs)
         for obj in resp['Contents']:
@@ -130,8 +136,8 @@ def update_ownership(task):
                     Bucket=task['S3Bucket'],
                     Key=obj['Key'],
                 ),
-                Bucket='arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3',
-                ACL='bucket-owner-full-control',
+                Bucket='arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3',
+                ExtraArgs={ 'ACL': 'bucket-owner-full-control' },
                 Key='raw/me3/' + obj['Key']
             )
         if 'NextContinuationToken' not in resp: break
@@ -143,7 +149,6 @@ def clean_up_provisioned_db(snapshot_arn, event_id):
     if snapshot_name != os.environ['DB_NAME'] + '-snapshot':
         logger.info(f'ignoring clean up request for {snapshot_name}, as we\'re only monitoring {os.environ["DB_NAME"]}')
         return
-    logger.info('cleaning up provisioned db ' + snapshot_arn)
     export_task = export_task_identifier(snapshot_arn)
     rds = boto3.client('rds')
     tasks = rds.describe_export_tasks(
@@ -152,13 +157,17 @@ def clean_up_provisioned_db(snapshot_arn, event_id):
     if tasks['ExportTasks']:
         task = tasks['ExportTasks'][0]
         update_ownership(task)
+    logger.info('cleaning up provisioned db snapshot ' + snapshot_arn)
     rds.delete_db_cluster_snapshot(
         DBClusterSnapshotIdentifier=snapshot_name
     )
+    logger.info('Finished cleaning up provisioned db, moving on to cluster ' + snapshot_arn)
     rds.delete_db_cluster(
         DBClusterIdentifier=os.environ['DB_NAME'] + '-fordatalake',
         SkipFinalSnapshot=True
     )
+    logger.info('Finished cleaning up db cluster ' + snapshot_arn)
+
 
 
 def handler(event, context):
