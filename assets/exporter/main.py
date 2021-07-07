@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import re
+import subprocess
 
 import boto3
 
@@ -122,12 +123,17 @@ def update_ownership(task):
     s3 = boto3.client('s3')
     logger.info(f"changing ownership of s3://{task['S3Bucket']}/{task['S3Prefix']}{task['ExportTaskIdentifier']}")
     kwargs = { 'Bucket': task['S3Bucket'], 'Prefix': task['S3Prefix'] + task['ExportTaskIdentifier'] }
-    # assert 0 == os.system(
-    #     'aws s3 cp ' +
-    #     f's3://{task["S3Bucket"]}/{task["S3Prefix"]}{task["ExportTaskIdentifier"]} ' +
-    #     f's3://arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3 ' +
-    #     '--recursive --acl bucket-owner-full-control'
-    #     )
+    try:
+        subprocess.check_call(
+            '/opt/awscli/aws s3 cp ' +
+            f's3://{task["S3Bucket"]}/{task["S3Prefix"]}{task["ExportTaskIdentifier"]} ' +
+            f's3://arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3 ' +
+            '--recursive --acl bucket-owner-full-control'
+            )
+        return
+    except Exception as e:
+        logger.exceptoin(e)
+        logger.info('never-the-less, carrying on! (trying the python fallback)')
     while True:
         resp = s3.list_objects_v2(**kwargs)
         for obj in resp['Contents']:
@@ -196,25 +202,6 @@ def handler(event, context):
     elif message['Event ID'] in (DB_SNAPSHOT_EXPORT_COMPLETED, DB_SNAPSHOT_EXPORT_FAILED):
         clean_up_provisioned_db(message['Source ARN'], message['Event ID'])
 
-    # if message["Event ID"].endswith(os.environ["RDS_EVENT_ID"]) and re.match(
-    #     "^rds:" + os.environ["DB_NAME"] + "-\d{4}-\d{2}-\d{2}-\d{2}-\d{2}$",
-    #     message["Source ID"],
-    # ):
-    #     export_task_identifier = event["Records"][0]["Sns"]["MessageId"]
-    #     account_id = boto3.client("sts").get_caller_identity()["Account"]
-    #     response = boto3.client("rds").start_export_task(
-    #         ExportTaskIdentifier=(
-    #             (message["Source ID"][4:27] + '-').replace("--", "-") + event["Records"][0]["Sns"]["MessageId"]
-    #         ),
-    #         SourceArn=f"arn:aws:rds:{os.environ['AWS_REGION']}:{account_id}:snapshot:{message['Source ID']}",
-    #         S3BucketName=os.environ["SNAPSHOT_BUCKET_NAME"],
-    #         IamRoleArn=os.environ["SNAPSHOT_TASK_ROLE"],
-    #         KmsKeyId=os.environ["SNAPSHOT_TASK_KEY"],
-    #     )
-    #     response["SnapshotTime"] = str(response["SnapshotTime"])
-
-    #     logger.info("Snapshot export task started")
-    #     logger.info(json.dumps(response))
     else:
         logger.info(f"Ignoring event notification for {message['Source ID']}")
 

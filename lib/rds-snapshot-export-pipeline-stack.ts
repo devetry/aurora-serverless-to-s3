@@ -7,6 +7,7 @@ import {SnsEventSource} from "@aws-cdk/aws-lambda-event-sources";
 import {Key} from "@aws-cdk/aws-kms";
 import {CfnEventSubscription} from "@aws-cdk/aws-rds";
 import {BlockPublicAccess, Bucket, CfnAccessPoint} from "@aws-cdk/aws-s3";
+import { AwsCliLayer } from '@aws-cdk/lambda-layer-awscli';
 import {Topic} from "@aws-cdk/aws-sns";
 
 export interface RdsSnapshotExportPipelineStackProps extends cdk.StackProps {
@@ -228,7 +229,10 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(30),
       events: [
         new SnsEventSource(snapshotEventTopic)
-      ]
+      ],
+      layers: [
+        new AwsCliLayer(this, 'AwsCliLayer'),
+      ],
     });
 
     new CfnCrawler(this, "SnapshotExportCrawler", {
