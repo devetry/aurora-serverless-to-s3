@@ -132,7 +132,7 @@ def update_ownership(task):
             )
         return
     except Exception as e:
-        logger.exceptoin(e)
+        logger.exception(e)
         logger.info('never-the-less, carrying on! (trying the python fallback)')
     while True:
         resp = s3.list_objects_v2(**kwargs)
