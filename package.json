@@ -22,9 +22,11 @@
     "@aws-cdk/aws-lambda": "1.111.0",
     "@aws-cdk/aws-lambda-event-sources": "1.111.0",
     "@aws-cdk/aws-rds": "1.111.0",
+    "@aws-cdk/aws-s3": "1.111.0",
     "@aws-cdk/aws-sns": "1.111.0",
     "@aws-cdk/core": "1.111.0",
     "@aws-cdk/lambda-layer-awscli": "1.111.0",
+    "@bgschiller/lambda-layer-awscli-2": "0.0.3",
     "source-map-support": "^0.5.16"
   }
 }

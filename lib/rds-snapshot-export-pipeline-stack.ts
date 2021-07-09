@@ -7,7 +7,7 @@ import {SnsEventSource} from "@aws-cdk/aws-lambda-event-sources";
 import {Key} from "@aws-cdk/aws-kms";
 import {CfnEventSubscription} from "@aws-cdk/aws-rds";
 import {BlockPublicAccess, Bucket, CfnAccessPoint} from "@aws-cdk/aws-s3";
-import { AwsCliLayer } from '@aws-cdk/lambda-layer-awscli';
+import { AwsCliLayer } from '@bgschiller/lambda-layer-awscli-2';
 import {Topic} from "@aws-cdk/aws-sns";
 
 export interface RdsSnapshotExportPipelineStackProps extends cdk.StackProps {
@@ -233,6 +233,7 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
       layers: [
         new AwsCliLayer(this, 'AwsCliLayer'),
       ],
+      memorySize: 512, // we max out our memory when we go to run `aws cp`.
     });
 
     new CfnCrawler(this, "SnapshotExportCrawler", {
