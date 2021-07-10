@@ -3,18 +3,18 @@
         {
             "EventSource": "aws:sns",
             "EventVersion": "1.0",
-            "EventSubscriptionArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:21827ac3-751f-4226-99fa-4d192312d533",
+            "EventSubscriptionArn": "arn:aws:sns:us-west-2:356627073954:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-1JG4J1QRQA9SS:479e2d99-b939-4e17-8fbc-e478a0a3e496",
             "Sns": {
                 "Type": "Notification",
-                "MessageId": "82a80e3d-42dc-5e2f-a15c-5727dc1c3ce6",
-                "TopicArn": "arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT",
+                "MessageId": "02ac1197-c5a4-5084-8454-48f77231a708",
+                "TopicArn": "arn:aws:sns:us-west-2:356627073954:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-1JG4J1QRQA9SS",
                 "Subject": "RDS Notification Message",
-                "Message": "{\"Event Source\":\"me3-production-db-cluster-snapshot\",\"Event Time\":\"2021-05-16 04:15:45.378\",\"Identifier Link\":\"https://console.aws.amazon.com/rds/home?region=us-west-2#snapshot:engine=aurora;id=me3-dev-db-snapshot\",\"Source ID\":\"me3-dev-db-snapshot\",\"Source ARN\":\"arn:aws:rds:us-west-2:356627073954:cluster-snapshot:me3-production-db-cluster-snapshot\",\"Event ID\":\"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0164\",\"Event Message\":\"Export task completed\"}",
-                "Timestamp": "2021-05-16T04:16:00.194Z",
+                "Message": "{\"Event Source\":\"db-cluster-snapshot\",\"Event Time\":\"2021-07-08 08:20:37.218\",\"Identifier Link\":\"https://console.aws.amazon.com/rds/home?region=us-west-2#snapshot:engine=aurora;id=me3-production-db-cluster-snapshot\",\"Source ID\":\"me3-production-db-cluster-snapshot\",\"Source ARN\":\"arn:aws:rds:us-west-2:356627073954:cluster-snapshot:me3-production-db-cluster-snapshot\",\"Event ID\":\"http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Events.html#RDS-EVENT-0164\",\"Event Message\":\"Export task completed\"}",
+                "Timestamp": "2021-07-08T08:20:37.629Z",
                 "SignatureVersion": "1",
-                "Signature": "H/z31ZHJs4cdgR8wT0FZVWsAm9t9gUptNruHYQEl77TqO/XlhCcn/LyTZDD4rLgP7tyOoReEGwY9r6cTQGgJ4MDyppQpWhRBTPkzRqUeSmsUs2N/lExmukR6lPXrcSau6sTgBNS+4A9nWKE/ypUOxs1pIlCTx7esQzWOYhPHQzgOcDdSSOH7dP+IbVrLFJMAVLCRwlyL6zXhLQNbcgG/F8J+3k3QDllvVoZVj2srY823jILCZ2k3TNAYSab2tEbEno64fyKUG9E88ZJd9iMaF2ydwkVu2SL/bGY/IgnHbl7StTbkkuMHx993go1MyhE53iJx6ndOLmNOj5mpggxKxA==",
+                "Signature": "wEDZ1MRYm+pcgLKpKTMmJyQGhQv4Pl5dcaZPeOI9qLgInJMPsAoRkF3Lsc2pzQVtgX9GXF/3RKAhymU8fOQurXcuEG7NeOFKseq2nYrvprnwQzZiEqas8auZ1+P5kssH34+l7hYpinDKjEq5UKAp6CEzl03TXx79vVV+r0Czh4wAHx9oLP/tWvlnUqei6a6oMAFOCRj55upfZr8XE79haVMBgdQ8uf7ufKgWgWXOZfB1l5ghP3godwJqhl5Fyd9FsUyhpC+QFlaMjupinTQFiYXnUvt9+8Yazd6bdBJu6SQ/gpDE70gi01oxwH5ZaOzd6COU2yfQTqmGPxzIO7thCg==",
                 "SigningCertUrl": "https://sns.us-west-2.amazonaws.com/SimpleNotificationService-010a507c1833636cd94bdb98bd93083a.pem",
-                "UnsubscribeUrl": "https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:100026411130:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-YBOKMSBY6SLT:21827ac3-751f-4226-99fa-4d192312d533",
+                "UnsubscribeUrl": "https://sns.us-west-2.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-west-2:356627073954:RdsSnapshotExportToS3Pipeline-AuroraServerlessSnapshotPipeline3ADA308B-1JG4J1QRQA9SS:479e2d99-b939-4e17-8fbc-e478a0a3e496",
                 "MessageAttributes": {}
             }
         }
