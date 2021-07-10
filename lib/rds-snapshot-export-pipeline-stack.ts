@@ -125,8 +125,8 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
               "Resource": [
                 `${bucket.bucketArn}`,
                 `${bucket.bucketArn}/*`,
-                'arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3',
-                'arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3/*'
+                'arn:aws:s3:us-west-2:520882832350:accesspoint/eds-me3',
+                'arn:aws:s3:us-west-2:520882832350:accesspoint/eds-me3/*'
               ],
               "Effect": "Allow"
             }
@@ -233,7 +233,7 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
       layers: [
         new AwsCliLayer(this, 'AwsCliLayer'),
       ],
-      memorySize: 512, // we max out our memory when we go to run `aws cp`.
+      memorySize: 256, // we max out our memory when we go to run `aws cp`.
     });
 
     new CfnCrawler(this, "SnapshotExportCrawler", {

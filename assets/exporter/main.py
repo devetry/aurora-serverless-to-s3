@@ -123,10 +123,10 @@ def update_ownership(task):
     s3 = boto3.client('s3')
     logger.info(f"changing ownership of s3://{task['S3Bucket']}/{task['S3Prefix']}{task['ExportTaskIdentifier']}")
     kwargs = { 'Bucket': task['S3Bucket'], 'Prefix': task['S3Prefix'] + task['ExportTaskIdentifier'] }
-    subprocess.run(
+    subprocess.check_call(
         '/opt/awscli/aws/aws s3 cp ' +
         f's3://{task["S3Bucket"]}/{task["S3Prefix"]}{task["ExportTaskIdentifier"]} ' +
-        f's3://arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3 ' +
+        f's3://arn:aws:s3:us-west-2:520882832350:accesspoint/eds-me3/raw/me3 ' +
         '--recursive --acl bucket-owner-full-control',
         shell=True)
     logger.info('finished updating ownership')
