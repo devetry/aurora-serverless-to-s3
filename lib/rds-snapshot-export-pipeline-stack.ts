@@ -36,8 +36,6 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
     //   blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
     // });
 
-    const destBucket = new Bucket(this, "dest");
-
     const snapshotExportTaskRole = new Role(this, "SnapshotExportTaskRole", {
       assumedBy: new ServicePrincipal("export.rds.amazonaws.com"),
       description: "Role used by RDS to perform snapshot exports to S3",
@@ -118,24 +116,23 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
             },
             {
               "Action": [
-                "s3:PutObject*",
                 "s3:ListBucket",
-                "s3:GetObject*",
-                "s3:DeleteObject*",
-                "s3:GetBucketLocation"
+                "s3:GetObject",
+                "s3:PutObject",
+                "s3:PutObjectAcl"
               ],
               "Resource": [
                 `${bucket.bucketArn}`,
                 `${bucket.bucketArn}/*`,
+                "arn:aws:s3:us-west-2:520882832350:accesspoint/eds-me3/object/raw/me3",
+                "arn:aws:s3:us-west-2:520882832350:accesspoint/eds-me3/object/raw/me3/*",
+                "arn:aws:s3:::asu-sdc-eds",
+                "arn:aws:s3:::asu-sdc-eds/*",
+                "arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3",
+                "arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3/*",
               ],
-              "Condition": {
-                "StringLike" : { "s3:DataAccessPointArn" : [
-                  "arn:aws:s3:us-west-2:520882832350:accesspoint/eds-me3*",
-                  "arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3*"
-                 ] }
-              },
               "Effect": "Allow"
-            }
+          }
           ]
         })
       },
@@ -230,7 +227,6 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
         SNAPSHOT_BUCKET_NAME: bucket.bucketName,
         SNAPSHOT_TASK_ROLE: snapshotExportTaskRole.roleArn,
         SNAPSHOT_TASK_KEY: snapshotExportEncryptionKey.keyArn,
-        DEST_BUCKET: destBucket.bucketName,
       },
       role: lambdaExecutionRole,
       timeout: cdk.Duration.seconds(30),
