@@ -124,10 +124,8 @@ export class RdsSnapshotExportPipelineStack extends cdk.Stack {
               "Resource": [
                 `${bucket.bucketArn}`,
                 `${bucket.bucketArn}/*`,
-                "arn:aws:s3:us-west-2:520882832350:accesspoint/eds-me3/object/raw/me3",
-                "arn:aws:s3:us-west-2:520882832350:accesspoint/eds-me3/object/raw/me3/*",
-                "arn:aws:s3:::asu-sdc-eds",
-                "arn:aws:s3:::asu-sdc-eds/*",
+                "arn:aws:s3:::asu-s3dl-eds",
+                "arn:aws:s3:::asu-s3dl-eds/*",
                 "arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3",
                 "arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/object/raw/me3/*",
               ],

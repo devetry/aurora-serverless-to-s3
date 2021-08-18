@@ -126,7 +126,7 @@ def update_ownership(task):
     subprocess.check_call(
         '/opt/awscli/aws/aws s3 cp ' +
         f's3://{task["S3Bucket"]}/{task["S3Prefix"]}{task["ExportTaskIdentifier"]} ' +
-        f's3://arn:aws:s3:us-west-2:520882832350:accesspoint/eds-me3/object/raw/me3 ' +
+        f's3://arn:aws:s3:us-west-2:316793988975:accesspoint/eds-me3/raw/me3 ' +
         '--recursive --acl bucket-owner-full-control',
         shell=True)
     logger.info('finished updating ownership')
@@ -144,16 +144,16 @@ def clean_up_provisioned_db(snapshot_arn, event_id):
     if tasks['ExportTasks']:
         task = tasks['ExportTasks'][0]
         update_ownership(task)
-    # logger.info('cleaning up provisioned db snapshot ' + snapshot_arn)
-    # rds.delete_db_cluster_snapshot(
-    #     DBClusterSnapshotIdentifier=snapshot_name
-    # )
-    # logger.info('Finished cleaning up provisioned db, moving on to cluster ' + snapshot_arn)
-    # rds.delete_db_cluster(
-    #     DBClusterIdentifier=os.environ['DB_NAME'] + '-fordatalake',
-    #     SkipFinalSnapshot=True
-    # )
-    # logger.info('Finished cleaning up db cluster ' + snapshot_arn)
+    logger.info('cleaning up provisioned db snapshot ' + snapshot_arn)
+    rds.delete_db_cluster_snapshot(
+        DBClusterSnapshotIdentifier=snapshot_name
+    )
+    logger.info('Finished cleaning up provisioned db, moving on to cluster ' + snapshot_arn)
+    rds.delete_db_cluster(
+        DBClusterIdentifier=os.environ['DB_NAME'] + '-fordatalake',
+        SkipFinalSnapshot=True
+    )
+    logger.info('Finished cleaning up db cluster ' + snapshot_arn)
 
 
 
